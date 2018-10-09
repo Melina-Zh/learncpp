@@ -11,6 +11,9 @@
 #include <iostream>
 #include "customer.h"
 using namespace std;
+static double wait_t=0;
+static double fina_time;
+static double fina_ser=0;
 class server{
 private:
     int busy;
@@ -26,7 +29,8 @@ public:
         return(busy==0)?false:true;
     }
     void release(){
-        
+        wait_t+=current_cu.g_wait();
+        fina_time=current_cu.total_time();
         cout<<"the No."<<current_cu.get_id()<<" customer Done!"<<endl;
         busy=0;
     }
@@ -36,10 +40,20 @@ public:
     void work(customer cu,int i){
         cout<<"The No."<<i<<" server is serving the No."<<cu.get_id()<<" customer."<<endl;
         current_cu=cu;
+        fina_ser+=current_cu.g_ser();
         busy=1;
     }
     int current_id(){
         return current_cu.get_id();
+    }
+    double g_w()const{
+        return wait_t;
+    }
+    double g_f()const{
+        return fina_time;
+    }
+    double g_s()const{
+        return fina_ser;
     }
     
 };

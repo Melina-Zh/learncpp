@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <stdio.h>
 #include "server.h"
 #include "customer.h"
 #include <stdlib.h>
@@ -19,33 +20,37 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     double aver_arrive_time,aver_serve_time;
     int customer_num,max_queue_num,queue_num;
+    
     cout << "Plense enter the average arriving time"<< endl;//average 1/lambda
-    cin >> aver_arrive_time;
+    scanf("%lf",&aver_arrive_time);
+    
     if(aver_arrive_time<1e-8){
         cout<<"There will never be two persons arriving at bank at the same time"<<endl;
         return 0;
     }
     cout << "Plense enter the average serving time"<< endl;
-    cin >> aver_serve_time;
+    scanf("%lf",&aver_serve_time);
     if(aver_serve_time<1e-8){
         cout<<"We need time to serve each person"<<endl;
         return 0;
     }
     
     cout << "Plense enter the number of customers"<< endl;
-    cin >> customer_num;
+    scanf("%d",&customer_num);
+    
     
     cout << "Plense enter the maxinum number of one queue"<< endl;
-    cin >> max_queue_num;
-    
+    //cin >> max_queue_num;
+    scanf("%d",&max_queue_num);
     cout << "Plense enter the number of servers"<< endl;
-    cin >> queue_num;
-    
+    //cin >> queue_num;
+    scanf("%d",&queue_num);
     double arrive_time=0.0,serving_time=0.0,lambda_arr=0.0,lambda_ser=0.0,pv=0.0;
     int i=0,j=0,flag=0,k=0;
     int min=0,crowd=0;
     int f=0;
-    double min_c,exp_time;
+    double min_c;
+    int cu_delay=0;
     vector<customer> queue;//the only customer queue
     vector<int> release_server;
     srand((unsigned)time(0));
@@ -86,6 +91,14 @@ int main(int argc, const char * argv[]) {
                     }
                     else{
                         cout<<"There is no space for the No."<<i<<" customer. He is furious but he has to leave"<<endl;
+                        
+                        i++;
+                        pv=(double)(rand()%20)/20.0;
+                        while(pv==0||pv==1){
+                            pv=(double)(rand()%20)/20.0;
+                        }
+                        arrive_time+=(-1.0/lambda_arr)*log(1-pv);
+                        continue;
                     }
                     cu=queue[0];
                 }
@@ -143,6 +156,7 @@ int main(int argc, const char * argv[]) {
                             min_c=servers[j].curr_total_time();
                         }
                     }
+                    cu_delay++;
                     cout<<i<<"has to wait"<<endl;
                     if(arrive_time>servers[min].curr_total_time()){
                         crowd=0;
@@ -179,7 +193,7 @@ int main(int argc, const char * argv[]) {
  
         while(queue.size()!=0){//release the queue
           
-            
+            cu=queue[0];
                 j=0;
                 min=0;
                 min_c=servers[0].curr_total_time();
@@ -227,6 +241,18 @@ int main(int argc, const char * argv[]) {
         release_server.erase(iter);
     }
 
-    cout<<"The End"<<endl;
+    cout<<"***********The End**********"<<endl;
+    cout<<"The measurement indicators:"<<endl;
+    if(cu_delay==0){
+        cout<<"There is no delay in the queue."<<endl;
+    }
+    else{
+        cout<<"The average delay in the queue: "<<wait_t/cu_delay<<endl;
+    }
+    
+    cout<<"The average number of customers in queue: "<<wait_t/fina_time<<endl;
+    //cout<<fina_ser<<"      "<<fina_time<<endl;
+    cout<<"The utilisation of all servers: "<<fina_ser/(fina_time*queue_num)<<endl;
+    
     return 0;
 }

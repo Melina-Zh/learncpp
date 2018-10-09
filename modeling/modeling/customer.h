@@ -21,6 +21,9 @@ public:
     double get_arr()const{
         return arrive_time;
     }
+    double g_wait()const{
+        return waiting_time;
+    }
     int get_id()const{
         return i_d;
     }
@@ -29,6 +32,9 @@ public:
     }
     double total_time(){
         return arrive_time+serving_time+waiting_time;
+    }
+    double g_ser(){
+        return serving_time;
     }
 };
 

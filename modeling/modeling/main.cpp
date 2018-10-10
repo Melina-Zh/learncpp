@@ -21,7 +21,7 @@ int main(int argc, const char * argv[]) {
     double aver_arrive_time,aver_serve_time;
     int customer_num,max_queue_num,queue_num;
     
-    cout << "Plense enter the average arriving time"<< endl;//average 1/lambda
+    printf("Plense enter the average arriving time\n");//average 1/lambda
     scanf("%lf",&aver_arrive_time);
     
     if(aver_arrive_time<1e-8){
@@ -47,9 +47,9 @@ int main(int argc, const char * argv[]) {
     scanf("%d",&queue_num);
     double arrive_time=0.0,serving_time=0.0,lambda_arr=0.0,lambda_ser=0.0,pv=0.0;
     int i=0,j=0,flag=0,k=0;
-    int min=0,crowd=0;
-    int f=0;
+    int min=0;
     double min_c;
+    int f=0;
     int cu_delay=0;
     vector<customer> queue;//the only customer queue
     vector<int> release_server;
@@ -118,20 +118,20 @@ int main(int argc, const char * argv[]) {
                     if(servers[release_server[k]].curr_total_time()<min_c){
                         min=k;
                         min_c=servers[release_server[k]].curr_total_time();
+                        
                     }
                 }
                 servers[release_server[min]].release();
                 vector<int>::iterator iter = release_server.begin()+min;
                 release_server.erase(iter);
                 if(flag==0){
-                    f=min;
-                    
+                    f=release_server[min];
                 }
                 flag=1;
             }
             if(flag==1){
                 cout<<"The No."<<i<<" customer arrives."<<endl;
-                servers[min].work(cu,min);
+                servers[f].work(cu,f);
             }
             
             
@@ -159,16 +159,11 @@ int main(int argc, const char * argv[]) {
                     cu_delay++;
                     cout<<i<<"has to wait"<<endl;
                     if(arrive_time>servers[min].curr_total_time()){
-                        crowd=0;
                         servers[min].release();
-                        
                         cu.s_wait(servers[min].curr_total_time()-cu.get_arr());
                         servers[min].work(cu,min);
                         flag=1;
                         
-                    }
-                    else{
-                        crowd=1;
                     }
                     
                     

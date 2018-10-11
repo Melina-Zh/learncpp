@@ -15,7 +15,11 @@ private:
     double waiting_time=0;
     int i_d;
 public:
-    customer(){}
+    customer(){
+        arrive_time=0;
+        serving_time=0;
+        waiting_time=0;
+    }
     customer(double arrive_time,double serving_time,int i_d):
     arrive_time(arrive_time),serving_time(serving_time),i_d(i_d){}
     double get_arr()const{

@@ -30,6 +30,7 @@ public:
     }
     void release(){
         wait_t+=current_cu.g_wait();
+        //cout<<"wait_t: "<<wait_t;
         fina_time=current_cu.total_time();
         cout<<"the No."<<current_cu.get_id()<<" customer Done!"<<endl;
         busy=0;
@@ -39,6 +40,10 @@ public:
     }
     void work(customer cu,int i){
         cout<<"The No."<<i<<" server is serving the No."<<cu.get_id()<<" customer."<<endl;
+        if(current_cu.total_time()>cu.get_arr()){
+            cu.s_wait(current_cu.total_time()-cu.get_arr());
+        }
+        
         current_cu=cu;
         fina_ser+=current_cu.g_ser();
         busy=1;
